@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<th:block th:fragment="setPageVO( pageVO, link )">
+<ul>
+    <!-- 3. 첫 페이지로 이동 버튼 -->
+    <li th:if="${pageVO.page != 1}">
+        <a th:href="@{${link}(
+                            page=1
+                            ,amount=${pageVO.cri.amount}
+                            ,searchName=${pageVO.cri.searchName}
+                            ,searchContent=${pageVO.cri.searchContent}
+                            ,searchPrice=${pageVO.cri.searchPrice}
+                            ,startDate=${pageVO.cri.startDate}
+                            ,endDate=${pageVO.cri.endDate}
+                            ,searchWriter=${pageVO.cri.searchWriter}
+                            ,searchTitle=${pageVO.cri.searchTitle})}">
+            <i class="fa fa-angle-double-left" aria-hidden="true"></i>
+        </a>
+    </li>
+    <!-- 2. 이전버튼 -->
+    <li style="margin-right:5px;" th:if="${pageVO.prev}">
+        <a th:href="@{${link}(
+                            page=${pageVO.start - 1}
+                            ,amount=${pageVO.cri.amount}
+                            ,searchName=${pageVO.cri.searchName}
+                            ,searchContent=${pageVO.cri.searchContent}
+                            ,searchPrice=${pageVO.cri.searchPrice}
+                            ,startDate=${pageVO.cri.startDate}
+                            ,endDate=${pageVO.cri.endDate}
+                            ,searchWriter=${pageVO.cri.searchWriter}
+                            ,searchTitle=${pageVO.cri.searchTitle})}">
+            <i class="fa fa-angle-left" aria-hidden="true"></i>
+        </a>
+    </li>
+
+    <!-- 1. 페이지네이션 -->
+    <th:block th:each="pageNum : ${pageVO.pageList}">
+        <li th:class="${pageNum == pageVO.page ? 'on' : ''}">
+            <a th:href="@{${link}(
+                            page=${pageNum}
+                            ,amount=${pageVO.cri.amount}
+                            ,searchName=${pageVO.cri.searchName}
+                            ,searchContent=${pageVO.cri.searchContent}
+                            ,searchPrice=${pageVO.cri.searchPrice}
+                            ,startDate=${pageVO.cri.startDate}
+                            ,endDate=${pageVO.cri.endDate}
+                            ,searchWriter=${pageVO.cri.searchWriter}
+                            ,searchTitle=${pageVO.cri.searchTitle})}">
+                [[${pageNum}]]
+            </a>
+        </li>
+    </th:block>
+
+    <!-- 2. 다음버튼 -->
+    <li style="margin-left:5px;" th:if="${pageVO.next}">
+        <a th:href="@{${link}(
+                            page=${pageVO.end + 1}
+                            ,amount=${pageVO.cri.amount}
+                            ,searchName=${pageVO.cri.searchName}
+                            ,searchContent=${pageVO.cri.searchContent}
+                            ,searchPrice=${pageVO.cri.searchPrice}
+                            ,startDate=${pageVO.cri.startDate}
+                            ,endDate=${pageVO.cri.endDate}
+                            ,searchWriter=${pageVO.cri.searchWriter}
+                            ,searchTitle=${pageVO.cri.searchTitle})}">
+            <i class="fa fa-angle-right" aria-hidden="true"></i>
+        </a>
+    </li>
+    <!-- 3. 끝 페이지로 이동 버튼 -->
+    <li th:if="${pageVO.page != pageVO.realEnd}">
+        <a th:href="@{${link}(
+                            page=${pageVO.realEnd}
+                            ,amount=${pageVO.cri.amount}
+                            ,searchName=${pageVO.cri.searchName}
+                            ,searchContent=${pageVO.cri.searchContent}
+                            ,searchPrice=${pageVO.cri.searchPrice}
+                            ,startDate=${pageVO.cri.startDate}
+                            ,endDate=${pageVO.cri.endDate}
+                            ,searchWriter=${pageVO.cri.searchWriter}
+                            ,searchTitle=${pageVO.cri.searchTitle})}">
+            <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+        </a>
+    </li>
+</ul>
+</th:block>
+
+</html>

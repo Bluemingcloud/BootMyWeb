@@ -1,0 +1,102 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coding404.myweb.product.ProductMapper">
+
+    <insert id="productInsert" parameterType="ProductVO">
+        INSERT INTO PRODUCT(PROD_ENDDATE,
+                            PROD_WRITER,
+                            PROD_NAME,
+                            PROD_PRICE,
+                            PROD_COUNT,
+                            PROD_DISCOUNT,
+                            PROD_PURCHASE_YN,
+                            PROD_CONTENT,
+                            PROD_COMMENT)
+        VALUES(#{prodEnddate},
+               #{prodWriter},
+               #{prodName},
+               #{prodPrice},
+               #{prodCount},
+               #{prodDiscount},
+               #{prodPurchaseYn},
+               #{prodContent},
+               #{prodComment}
+              )
+    </insert>
+
+    <!-- 목록을 조회한다 -->
+    <!-- 동적쿼리 test구문에는 vo의 getter 나 map 의 key 값이 사용됩니다. -->
+    <select id="getList" resultType="ProductVO">
+        SELECT *
+        FROM PRODUCT
+        WHERE PROD_WRITER = #{userId}
+            <if test="cri.searchName != '' and cri.searchName != null">
+                AND PROD_NAME LIKE CONCAT('%', #{cri.searchName}, '%')
+            </if>
+            <if test="cri.searchContent != '' and cri.searchContent != null">
+                AND PROD_CONTENT LIKE CONCAT('%', #{cri.searchContent}, '%')
+            </if>
+            <if test="cri.startDate != '' and cri.startDate != null">
+                <![CDATA[ AND PROD_ENDDATE >= #{cri.startDate} ]]>
+            </if>
+            <if test="cri.endDate != '' and cri.endDate != null">
+                <![CDATA[ AND PROD_ENDDATE <= #{cri.endDate} ]]>
+            </if>
+        ORDER BY
+            <choose>
+                <when test="cri.searchPrice == 'asc'">
+                    PROD_PRICE ASC,
+                </when>
+                <when test="cri.searchPrice == 'desc'">
+                    PROD_PRICE DESC,
+                </when>
+                <otherwise> </otherwise>
+            </choose>
+            PROD_ID DESC
+        LIMIT #{cri.pageStart}, #{cri.amount}
+    </select>
+
+    <!-- 데이터 전체 개수 조회 -->
+    <select id="getTotal" resultType="int">
+        SELECT COUNT(*) AS TOTAL
+        FROM PRODUCT
+        WHERE PROD_WRITER = #{userId}
+        <if test="cri.searchName != '' and cri.searchName != null">
+            AND PROD_NAME LIKE CONCAT('%', #{cri.searchName}, '%')
+        </if>
+        <if test="cri.searchContent != '' and cri.searchContent != null">
+            AND PROD_CONTENT LIKE CONCAT('%', #{cri.searchContent}, '%')
+        </if>
+        <if test="cri.startDate != '' and cri.startDate != null">
+            <![CDATA[ AND PROD_ENDDATE >= #{cri.startDate} ]]>
+        </if>
+        <if test="cri.endDate != '' and cri.endDate != null">
+            <![CDATA[ AND PROD_ENDDATE <= #{cri.endDate} ]]>
+        </if>
+    </select>
+
+    <!-- 상세정보 조회 -->
+    <select id="getDetail" resultType="ProductVO">
+        SELECT *
+        FROM PRODUCT
+        WHERE PROD_ID = #{prodId}
+    </select>
+
+    <update id="productUpdate">
+        UPDATE PRODUCT
+        SET PROD_ENDDATE = #{prodEnddate},
+            PROD_NAME = #{prodName},
+            PROD_PRICE = #{prodPrice},
+            PROD_COUNT = #{prodCount},
+            PROD_DISCOUNT = #{prodDiscount},
+            PROD_PURCHASE_YN = #{prodPurchaseYn},
+            PROD_CONTENT = #{prodContent},
+            PROD_COMMENT = #{prodComment}
+        WHERE PROD_ID = #{prodId}
+    </update>
+
+    <delete id="productDelete">
+        DELETE FROM PRODUCT WHERE PROD_ID = #{prodId}
+    </delete>
+</mapper>
