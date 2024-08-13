@@ -1,5 +1,6 @@
 package com.coding404.myweb.product;
 
+import com.coding404.myweb.command.CategoryVO;
 import com.coding404.myweb.command.ProductVO;
 import com.coding404.myweb.util.Criteria;
 
@@ -13,5 +14,10 @@ public interface ProductService {
     public ProductVO getDetail(int prodId);
     public int productUpdate(ProductVO vo);
     public int productDelete(int prodId);
+    public List<String> getCategoryNav();
+    // 카테고리 1단계
+    public List<CategoryVO> getCategory();
+    // 카테고리 2, 3단계
+    public List<CategoryVO> getCategoryChild(CategoryVO vo);
 
 }

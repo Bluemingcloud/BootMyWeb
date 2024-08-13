@@ -1,5 +1,6 @@
 package com.coding404.myweb.product;
 
+import com.coding404.myweb.command.CategoryVO;
 import com.coding404.myweb.command.ProductVO;
 import com.coding404.myweb.util.Criteria;
 import org.apache.ibatis.annotations.Mapper;
@@ -16,4 +17,7 @@ public interface ProductMapper {
     public ProductVO getDetail(int prodId);
     public int productUpdate(ProductVO vo);
     public int productDelete(int prodId);
+    public List<CategoryVO> getCategory();
+    public List<CategoryVO> getCategoryChild(CategoryVO vo);
+    public List<String> getCategoryNav();
 }

@@ -99,4 +99,36 @@
     <delete id="productDelete">
         DELETE FROM PRODUCT WHERE PROD_ID = #{prodId}
     </delete>
+
+    <select id="getCategoryNav" resultType="String">
+        SELECT
+            CASE A1.CATEGORY_PARENT_LV
+                WHEN 0 THEN A1.CATEGORY_DETAIL_NM
+                WHEN 1 THEN CONCAT(A2.CATEGORY_DETAIL_NM, ' > ', A1.CATEGORY_DETAIL_NM)
+                WHEN 2 THEN CONCAT(A3.CATEGORY_DETAIL_NM, ' > ', A2.CATEGORY_DETAIL_NM, ' > ', A1.CATEGORY_DETAIL_NM)
+                END AS CATEGORY_NAV
+        FROM PRODUCT_CATEGORY A1
+                 LEFT OUTER JOIN PRODUCT_CATEGORY A2
+                                 ON A1.CATEGORY_PARENT_LV = A2.CATEGORY_LV AND A1.CATEGORY_DETAIL_PARENT_LV = A2.CATEGORY_DETAIL_LV AND A1.GROUP_ID = A2.GROUP_ID
+                 LEFT OUTER JOIN PRODUCT_CATEGORY A3
+                                 ON A2.CATEGORY_PARENT_LV = A3.CATEGORY_LV AND A2.CATEGORY_DETAIL_PARENT_LV = A3.CATEGORY_DETAIL_LV
+        ORDER BY CATEGORY_NAV ASC
+    </select>
+
+    <!-- 카테고리 1단계를 조회한다 -->
+    <select id="getCategory" resultType="CategoryVO">
+        SELECT *
+        FROM PRODUCT_CATEGORY
+        WHERE CATEGORY_LV = 1
+    </select>
+
+    <!-- 카테고리 2, 3단계를 조회한다. -->
+    <select id="getCategoryChild" resultType="CategoryVO">
+        SELECT *
+        FROM PRODUCT_CATEGORY
+        WHERE GROUP_ID = #{groupId}
+          AND CATEGORY_PARENT_LV = #{categoryLv}
+          AND CATEGORY_DETAIL_PARENT_LV = #{categoryDetailLv}
+    </select>
+
 </mapper>
